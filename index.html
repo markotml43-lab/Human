@@ -1,58 +1,183 @@
 <!DOCTYPE html>
-<html>
+<html lang="sr">
 <head>
   <meta charset="UTF-8">
-  <title>Turnir Mini Igra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Turnir Igrica</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    #gameArea {
-      width: 300px;
-      height: 300px;
-      border: 2px solid black;
-      position: relative;
-      margin-top: 20px;
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 0;
     }
-    #player {
-      width: 30px;
-      height: 30px;
-      background: red;
-      position: absolute;
-      top: 135px;
-      left: 135px;
+    header {
+      background: #4a90e2;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 10px 0;
+    }
+    nav a {
+      text-decoration: none;
+      color: #4a90e2;
+      font-weight: bold;
+    }
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    section {
+      background: white;
+      padding: 20px;
+      margin: 10px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 10px 20px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
+    }
+    button:hover {
+      background: #357ab7;
+    }
+    #gameCanvas {
+      background: #d3f0ff;
+      border: 2px solid #4a90e2;
+      display: block;
+      margin: 10px auto;
     }
   </style>
 </head>
 <body>
-  <h1>Dobrodošli na moj turnir!</h1>
-  <p>Mini igra: klikni na crveni kvadrat da sakupiš poene!</p>
 
-  <div id="gameArea">
-    <div id="player"></div>
-  </div>
+<header>
+  <h1>Turnir Igrica</h1>
+  <nav>
+    <a href="#info">Početna</a>
+    <a href="#game">Igra</a>
+    <a href="#leaderboard">Rang Lista</a>
+  </nav>
+</header>
 
-  <p>Poeni: <span id="score">0</span></p>
+<main>
+  <!-- Početna stranica -->
+  <section id="info">
+    <h2>Dobrodošli na Turnir!</h2>
+    <p>Prijavite se i igrajte Flappy Bird! Prvih 100 igrača učestvuje. Kotizacija: <strong>10€</strong>.</p>
+    <p>Raspodela fonda: 50% nagrade za 1., 2., 3. mesto, 30% humanitarno, 20% admin.</p>
+    <p>Turnir traje <strong>7 dana</strong> ili dok se ne skupi 100 igrača.</p>
+    <button id="startGameBtn">Počni Igru</button>
+  </section>
 
-  <script>
-    const player = document.getElementById("player");
-    const scoreElem = document.getElementById("score");
-    let score = 0;
+  <!-- Canvas igrica -->
+  <section id="game">
+    <h2>Igra</h2>
+    <canvas id="gameCanvas" width="400" height="500"></canvas>
+    <p>Score: <span id="score">0</span></p>
+  </section>
 
-    function movePlayerRandom() {
-      const gameArea = document.getElementById("gameArea");
-      const maxX = gameArea.clientWidth - player.offsetWidth;
-      const maxY = gameArea.clientHeight - player.offsetHeight;
-      player.style.left = Math.floor(Math.random() * maxX) + "px";
-      player.style.top = Math.floor(Math.random() * maxY) + "px";
+  <!-- Rang lista -->
+  <section id="leaderboard">
+    <h2>Rang Lista</h2>
+    <ol id="leaderboardList">
+      <li>Aleksandar - 100</li>
+      <li>Jovana - 85</li>
+      <li>Marko - 70</li>
+    </ol>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2026 Turnir Igrica | Humanitarni Fond & Admin</p>
+</footer>
+
+<script>
+  // Dugme za start igre
+  const startBtn = document.getElementById("startGameBtn");
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+  const scoreDisplay = document.getElementById("score");
+  let score = 0;
+  let gameRunning = false;
+
+  startBtn.addEventListener("click", function() {
+    if(!gameRunning){
+      gameRunning = true;
+      score = 0;
+      scoreDisplay.textContent = score;
+      alert("Igra počinje! Klikom na canvas igrač leti.");
+      gameLoop();
+    }
+  });
+
+  // Jednostavan Flappy Bird skelet
+  let player = { x: 50, y: 250, width: 30, height: 30, dy: 0 };
+  const gravity = 0.6;
+  const jump = -10;
+
+  canvas.addEventListener("click", () => {
+    if(gameRunning) player.dy = jump;
+  });
+
+  function gameLoop(){
+    if(!gameRunning) return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    // Gravity
+    player.dy += gravity;
+    player.y += player.dy;
+
+    // Ograničenja
+    if(player.y + player.height > canvas.height){
+      player.y = canvas.height - player.height;
+      player.dy = 0;
+      gameRunning = false;
+      endGame();
     }
 
-    player.addEventListener("click", function() {
-      score++;
-      scoreElem.textContent = score;
-      movePlayerRandom();
-    });
+    if(player.y < 0){
+      player.y = 0;
+      player.dy = 0;
+    }
 
-    // Pokreni igru odmah
-    movePlayerRandom();
-  </script>
+    // Crtanje igrača
+    ctx.fillStyle = "#e74c3c";
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+
+    // Povecaj score
+    score++;
+    scoreDisplay.textContent = score;
+
+    requestAnimationFrame(gameLoop);
+  }
+
+  function endGame(){
+    alert("Kraj igre! Tvoj score: " + score);
+    addToLeaderboard("Igrač", score);
+  }
+
+  function addToLeaderboard(name, score){
+    const ol = document.getElementById("leaderboardList");
+    const li = document.createElement("li");
+    li.textContent = name + " - " + score;
+    ol.appendChild(li);
+  }
+</script>
+
 </body>
 </html>
