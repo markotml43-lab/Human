@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Turnir Igrica - Pac‑Man</title>
+<title>Turnir Igrica - PAC‑MAN</title>
 <style>
   body { font-family: Arial, sans-serif; background:#f0f2f5; margin:0; padding:0; }
   header { background:#4a90e2; color:white; padding:20px; text-align:center; }
@@ -24,8 +24,7 @@
   <h1>Turnir Igrica - PAC‑MAN</h1>
   <nav>
     <a href="#info">Početna</a>
-    <a href="#registration">Registracija</a>
-    <a href="#payment">Uplata</a>
+    <a href="#auth">Login / Registracija</a>
     <a href="#game">Igra</a>
     <a href="#leaderboard">Rang Lista</a>
   </nav>
@@ -41,29 +40,31 @@
   <p>Turnir traje <strong>7 dana</strong> ili dok se ne skupi <strong>100 igrača</strong>.</p>
 </section>
 
-<!-- Registracija -->
-<section id="registration">
-  <h2>Registracija igrača</h2>
-  <form id="regForm">
-    <label for="nickname">Nickname:</label>
-    <input type="text" id="nickname" required>
-    <label for="email">Email:</label>
-    <input type="email" id="email" required>
-    <label for="password">Password:</label>
-    <input type="password" id="password" required>
-    <button type="submit">Registruj se</button>
-  </form>
-</section>
-
-<!-- PayPal sekcija -->
-<section id="payment">
-  <h2>Uplata kotizacije</h2>
-  <p>Klikom na dugme uplaćujete 10€ za učestvovanje u turniru:</p>
-  <form action="https://www.paypal.com/donate" method="post" target="_blank">
-    <!-- ZAMENI sa tvojim PayPal ID -->
-    <input type="hidden" name="hosted_button_id" value="TVOJ_PAYPAL_BUTTON_ID">
-    <button type="submit">Uplati putem PayPal‑a</button>
-  </form>
+<!-- Login / Registracija -->
+<section id="auth">
+  <h2>Login / Registracija</h2>
+  <div id="registerDiv">
+    <h3>Registracija</h3>
+    <form id="regForm">
+      <label for="nickname">Nickname:</label>
+      <input type="text" id="nickname" required>
+      <label for="email">Email:</label>
+      <input type="email" id="email" required>
+      <label for="password">Password:</label>
+      <input type="password" id="password" required>
+      <button type="submit">Registruj se</button>
+    </form>
+  </div>
+  <div id="loginDiv" style="margin-top:20px;">
+    <h3>Login</h3>
+    <form id="loginForm">
+      <label for="loginEmail">Email:</label>
+      <input type="email" id="loginEmail" required>
+      <label for="loginPassword">Password:</label>
+      <input type="password" id="loginPassword" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
 </section>
 
 <!-- PAC‑MAN igra -->
@@ -86,21 +87,47 @@
 </footer>
 
 <script>
-/* ---------- Registracija igrača ---------- */
-const regForm = document.getElementById("regForm");
-let players = [];
+/* ---------- Registracija i Login sa localStorage ---------- */
+let players = JSON.parse(localStorage.getItem("players")) || [];
+let currentUser = null;
 
-regForm.addEventListener("submit", function(e) {
+const regForm = document.getElementById("regForm");
+const loginForm = document.getElementById("loginForm");
+
+regForm.addEventListener("submit", function(e){
   e.preventDefault();
   const nickname = document.getElementById("nickname").value;
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
+
+  // Provera da li email već postoji
+  if(players.some(p => p.email === email)){
+    alert("Email već registrovan!");
+    return;
+  }
+
   players.push({nickname,email,password,score:0});
-  alert("Registracija uspešna! Sada možete uplatiti i igrati.");
+  localStorage.setItem("players", JSON.stringify(players));
+  alert("Registracija uspešna! Sada se ulogujte.");
   regForm.reset();
 });
 
-/* ---------- PAC‑MAN Igra (pojednostavljena) ---------- */
+loginForm.addEventListener("submit", function(e){
+  e.preventDefault();
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+
+  const user = players.find(p => p.email === email && p.password === password);
+  if(user){
+    currentUser = user;
+    alert("Login uspešan! Možete igrati igru.");
+    loginForm.reset();
+  } else {
+    alert("Pogrešan email ili password!");
+  }
+});
+
+/* ---------- Pacman Igra ---------- */
 const canvas = document.getElementById("pacmanCanvas");
 const ctx = canvas.getContext("2d");
 const scoreDisplay = document.getElementById("pacmanScore");
@@ -117,7 +144,6 @@ for(let i=0;i<15;i++){
   }
 }
 
-// Draw pacman
 function drawPacman(){
   ctx.fillStyle = "yellow";
   ctx.beginPath();
@@ -126,7 +152,6 @@ function drawPacman(){
   ctx.fill();
 }
 
-// Draw dots
 function drawDots(){
   ctx.fillStyle = "white";
   dots.forEach(d => {
@@ -138,7 +163,6 @@ function drawDots(){
   });
 }
 
-// Move pacman
 document.addEventListener("keydown", (e) => {
   if(!gameActive) return;
   if(e.key === "ArrowRight") pacman.dir = 0;
@@ -147,23 +171,21 @@ document.addEventListener("keydown", (e) => {
   if(e.key === "ArrowUp") pacman.dir = 3;
 });
 
-// Game loop
 function pacmanLoop(){
   if(!gameActive) return;
   ctx.fillStyle = "black";
   ctx.fillRect(0,0,canvas.width,canvas.height);
   drawDots();
 
-  // Move
+  // Move pacman
   if(pacman.dir === 0) pacman.x += 4;
   if(pacman.dir === 1) pacman.y += 4;
   if(pacman.dir === 2) pacman.x -= 4;
   if(pacman.dir === 3) pacman.y -= 4;
 
-  if(pacman.x < 0) pacman.x = 0;
-  if(pacman.y < 0) pacman.y = 0;
-  if(pacman.x > 450) pacman.x = 450;
-  if(pacman.y > 450) pacman.y = 450;
+  // Boundaries
+  pacman.x = Math.max(12, Math.min(450-12, pacman.x));
+  pacman.y = Math.max(12, Math.min(450-12, pacman.y));
 
   // Eat dots
   dots.forEach(d => {
@@ -178,26 +200,53 @@ function pacmanLoop(){
   requestAnimationFrame(pacmanLoop);
 }
 
-// Start game on click
+// Start game on button click, only if logged in
 document.getElementById("info").querySelector("button").addEventListener("click", () => {
-  if(players.length === 0) {
-    alert("Prvo se registrujte!");
-  } else {
-    gameActive = true;
-    score = 0;
-    dots.forEach(d=>d.eaten=false);
-    scoreDisplay.textContent = score;
-    pacmanLoop();
+  if(!currentUser) {
+    alert("Morate se ulogovati pre igranja!");
+    return;
   }
+  gameActive = true;
+  score = 0;
+  dots.forEach(d=>d.eaten=false);
+  scoreDisplay.textContent = score;
+  pacmanLoop();
 });
 
-/* ---------- Rang lista logika ---------- */
-function addToLeaderboard(name, score){
+// Rang lista update
+function updateLeaderboard(){
   const list = document.getElementById("leaderboardList");
-  const li = document.createElement("li");
-  li.textContent = `${name} - ${score}`;
-  list.appendChild(li);
+  list.innerHTML = "";
+  const sorted = [...players].sort((a,b)=>b.score-a.score);
+  sorted.forEach(p => {
+    const li = document.createElement("li");
+    li.textContent = `${p.nickname} - ${p.score}`;
+    list.appendChild(li);
+  });
 }
+
+// Save score when game ends
+function saveScore(){
+  if(currentUser){
+    currentUser.score = score;
+    players = players.map(p => p.email === currentUser.email ? currentUser : p);
+    localStorage.setItem("players", JSON.stringify(players));
+    updateLeaderboard();
+  }
+}
+
+// Override pacmanLoop to detect end
+const originalPacmanLoop = pacmanLoop;
+pacmanLoop = function(){
+  if(!gameActive) return;
+  originalPacmanLoop();
+  // Check if all dots eaten
+  if(dots.every(d=>d.eaten)){
+    gameActive = false;
+    alert("Bravo! Završili ste igru! Score: " + score);
+    saveScore();
+  }
+};
 </script>
 
 </body>
