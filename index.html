@@ -1,42 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Turnir Mini Igra</title>
+  <meta charset="UTF-8">
+  <title>Turnir Mini Igra</title>
+  <style>
+    #gameArea {
+      width: 300px;
+      height: 300px;
+      border: 2px solid black;
+      position: relative;
+      margin-top: 20px;
+    }
+    #player {
+      width: 30px;
+      height: 30px;
+      background: red;
+      position: absolute;
+      top: 135px;
+      left: 135px;
+      cursor: pointer;
+    }
+  </style>
 </head>
-
 <body>
-<h1>Dobrodošli na moj turnir!</h1>
-<p>Mini igra: klikni na kvadrat da sakupiš poene!</p>
+  <h1>Dobrodošli na moj turnir!</h1>
+  <p>Mini igra: klikni na crveni kvadrat da sakupiš poene!</p>
 
-<div id="gameArea" style="width:300px;height:300px;border:2px solid black;position:relative;">
-  <div id="player" style="width:30px;height:30px;background:red;position:absolute;top:135px;left:135px;"></div>
-</div>
+  <div id="gameArea">
+    <div id="player"></div>
+  </div>
 
-<p>Poeni: <span id="score">0</span></p>
+  <p>Poeni: <span id="score">0</span></p>
 
-<script>
-let player = document.getElementById("player");
-let scoreElem = document.getElementById("score");
-let score = 0;
+  <script>
+    const player = document.getElementById("player");
+    const scoreElem = document.getElementById("score");
+    let score = 0;
 
-function movePlayerRandom() {
-  let gameArea = document.getElementById("gameArea");
-  let maxX = gameArea.clientWidth - player.offsetWidth;
-  let maxY = gameArea.clientHeight - player.offsetHeight;
-  player.style.left = Math.floor(Math.random() * maxX) + "px";
-  player.style.top = Math.floor(Math.random() * maxY) + "px";
-}
+    function movePlayerRandom() {
+      const gameArea = document.getElementById("gameArea");
+      const maxX = gameArea.clientWidth - player.offsetWidth;
+      const maxY = gameArea.clientHeight - player.offsetHeight;
+      player.style.left = Math.floor(Math.random() * maxX) + "px";
+      player.style.top = Math.floor(Math.random() * maxY) + "px";
+    }
 
-player.addEventListener("click", function(){
-  score++;
-  scoreElem.textContent = score;
-  movePlayerRandom();
-});
+    player.addEventListener("click", function() {
+      score++;
+      scoreElem.textContent = score;
+      movePlayerRandom();
+    });
 
-// Pokreni igru odmah
-movePlayerRandom();
-</script>
+    // Pokreni igru odmah
+    movePlayerRandom();
+  </script>
 </body>
-
 </html>
