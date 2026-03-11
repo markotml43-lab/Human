@@ -1,214 +1,203 @@
 <!DOCTYPE html>
 <html lang="sr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Turnir Igrica</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body { font-family:'Roboto', sans-serif; background:#f0f2f5; margin:0; padding:0; }
-    header { background:#4a90e2; color:white; padding:20px; text-align:center; }
-    nav { display:flex; justify-content:center; gap:20px; margin:10px 0; }
-    nav a { text-decoration:none; color:#4a90e2; font-weight:bold; }
-    main { display:flex; flex-direction:column; align-items:center; padding:20px; }
-    section { background:white; padding:20px; margin:10px; border-radius:10px; width:90%; max-width:600px; box-shadow:0 4px 8px rgba(0,0,0,0.1); }
-    button { padding:10px 20px; background:#4a90e2; color:white; border:none; border-radius:5px; cursor:pointer; }
-    button:hover { background:#357ab7; }
-    #gameCanvas { background:#d3f0ff; border:2px solid #4a90e2; display:block; margin:10px auto; }
-    input { padding:8px; margin:5px 0; width:100%; border-radius:5px; border:1px solid #ccc; }
-    label { font-weight:bold; display:block; margin-top:10px; }
-    h2 { margin-top:0; }
-    #rulesContent { max-height:150px; overflow-y:auto; background:#f9f9f9; padding:10px; border-radius:5px; border:1px solid #ccc; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Turnir Igrica - Pac‑Man</title>
+<style>
+  body { font-family: Arial, sans-serif; background:#f0f2f5; margin:0; padding:0; }
+  header { background:#4a90e2; color:white; padding:20px; text-align:center; }
+  nav { text-align:center; margin:10px 0; }
+  nav a { margin:0 10px; text-decoration:none; color:#4a90e2; font-weight:bold; }
+  main { padding:20px; max-width:900px; margin:0 auto; }
+  section { background:white; padding:20px; margin:20px 0; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1); }
+  button { padding:10px 20px; background:#4a90e2; color:white; border:none; border-radius:5px; cursor:pointer; }
+  button:hover { background:#357ab7; }
+  input { padding:8px; margin:5px 0; width:100%; border-radius:5px; border:1px solid #ccc; }
+  #pacmanCanvas { background:black; display:block; margin:10px auto; border:3px solid #4a90e2; }
+  .scoreDisplay { font-size:18px; font-weight:bold; margin-top:10px; text-align:center; }
+</style>
 </head>
 <body>
 
 <header>
-  <h1>Turnir Igrica</h1>
+  <h1>Turnir Igrica - PAC‑MAN</h1>
   <nav>
     <a href="#info">Početna</a>
+    <a href="#registration">Registracija</a>
+    <a href="#payment">Uplata</a>
     <a href="#game">Igra</a>
     <a href="#leaderboard">Rang Lista</a>
   </nav>
 </header>
 
 <main>
-  <!-- Početna stranica -->
-  <section id="info">
-    <h2>Dobrodošli na Turnir!</h2>
-    <p>Prijavite se i igrajte Flappy Bird! Prvih 100 igrača učestvuje. Kotizacija: <strong>10€</strong>.</p>
-    <p>Raspodela fonda: 50% nagrade za 1.,2.,3. mesto, 30% humanitarno, 20% admin.</p>
-    <p>Turnir traje <strong>7 dana</strong> ili dok se ne skupi 100 igrača.</p>
-    <button id="startGameBtn">Počni Igru</button>
-    <h3>Pravila igre</h3>
-    <div id="rulesContent">
-      <p>1. Klikom na canvas igrač leti.</p>
-      <p>2. Izbegavajte prepreke i skupljajte poene.</p>
-      <p>3. Igra se završava kada igrač udari u tlo ili prepreku.</p>
-      <p>4. Najbolji igrači ulaze u rang listu.</p>
-      <p>5. Samo registrovani i uplaćeni igrači učestvuju u turniru.</p>
-    </div>
-  </section>
 
-  <!-- Registracija -->
-  <section id="registration">
-    <h2>Registracija igrača</h2>
-    <form id="regForm">
-      <label for="nickname">Nickname:</label>
-      <input type="text" id="nickname" required>
-      <label for="email">Email:</label>
-      <input type="email" id="email" required>
-      <label for="password">Password:</label>
-      <input type="password" id="password" required>
-      <button type="submit">Registruj se</button>
-    </form>
-  </section>
+<!-- Početna sekcija -->
+<section id="info">
+  <h2>Dobrodošli na Pac‑Man turnir!</h2>
+  <p>Registrujte se i igrajte PAC‑MAN! Kotizacija: <strong>10€</strong></p>
+  <p>Raspodela fonda: 50% nagrade (1.,2.,3. mesto), 30% humanitarno, 20% admin.</p>
+  <p>Turnir traje <strong>7 dana</strong> ili dok se ne skupi <strong>100 igrača</strong>.</p>
+</section>
 
-  <!-- Canvas igrica -->
-  <section id="game">
-    <h2>Igra</h2>
-    <canvas id="gameCanvas" width="400" height="500"></canvas>
-    <p>Score: <span id="score">0</span></p>
-  </section>
+<!-- Registracija -->
+<section id="registration">
+  <h2>Registracija igrača</h2>
+  <form id="regForm">
+    <label for="nickname">Nickname:</label>
+    <input type="text" id="nickname" required>
+    <label for="email">Email:</label>
+    <input type="email" id="email" required>
+    <label for="password">Password:</label>
+    <input type="password" id="password" required>
+    <button type="submit">Registruj se</button>
+  </form>
+</section>
 
-  <!-- PayPal uplata -->
-  <section id="payment">
-    <h2>Uplata kotizacije</h2>
-    <p>Klikom na dugme uplaćujete 10€ za učestvovanje u turniru:</p>
-    <form action="https://www.paypal.com/donate" method="post" target="_blank">
-      <!-- Zameni ovo sa tvojim PayPal linkom -->
-      <input type="hidden" name="hosted_button_id" value="TVOJ_PAYPAL_BUTTON_ID">
-      <button type="submit">Uplati preko PayPal-a</button>
-    </form>
-  </section>
+<!-- PayPal sekcija -->
+<section id="payment">
+  <h2>Uplata kotizacije</h2>
+  <p>Klikom na dugme uplaćujete 10€ za učestvovanje u turniru:</p>
+  <form action="https://www.paypal.com/donate" method="post" target="_blank">
+    <!-- ZAMENI sa tvojim PayPal ID -->
+    <input type="hidden" name="hosted_button_id" value="TVOJ_PAYPAL_BUTTON_ID">
+    <button type="submit">Uplati putem PayPal‑a</button>
+  </form>
+</section>
 
-  <!-- Rang lista -->
-  <section id="leaderboard">
-    <h2>Rang Lista</h2>
-    <ol id="leaderboardList">
-      <li>Aleksandar - 100</li>
-      <li>Jovana - 85</li>
-      <li>Marko - 70</li>
-    </ol>
-  </section>
+<!-- PAC‑MAN igra -->
+<section id="game">
+  <h2>Pac‑Man Igra</h2>
+  <canvas id="pacmanCanvas" width="450" height="450"></canvas>
+  <div class="scoreDisplay">Score: <span id="pacmanScore">0</span></div>
+</section>
+
+<!-- Rang Lista -->
+<section id="leaderboard">
+  <h2>Rang Lista</h2>
+  <ol id="leaderboardList"></ol>
+</section>
+
 </main>
 
-<footer>
+<footer style="text-align:center; padding:20px; background:#eee;">
   <p>&copy; 2026 Turnir Igrica | Humanitarni Fond & Admin</p>
 </footer>
 
 <script>
-  // Registracija
-  const regForm = document.getElementById("regForm");
-  let players = [];
-  regForm.addEventListener("submit", function(e){
-    e.preventDefault();
-    const nickname = document.getElementById("nickname").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    players.push({nickname,email,password,score:0});
-    alert("Registracija uspešna! Sada možete uplatiti i igrati.");
-    regForm.reset();
+/* ---------- Registracija igrača ---------- */
+const regForm = document.getElementById("regForm");
+let players = [];
+
+regForm.addEventListener("submit", function(e) {
+  e.preventDefault();
+  const nickname = document.getElementById("nickname").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  players.push({nickname,email,password,score:0});
+  alert("Registracija uspešna! Sada možete uplatiti i igrati.");
+  regForm.reset();
+});
+
+/* ---------- PAC‑MAN Igra (pojednostavljena) ---------- */
+const canvas = document.getElementById("pacmanCanvas");
+const ctx = canvas.getContext("2d");
+const scoreDisplay = document.getElementById("pacmanScore");
+
+let pacman = { x:220, y:220, dir:0 };  // 0=desno,1=dole,2=levo,3=gore
+let dots = [];
+let score = 0;
+let gameActive = false;
+
+// Generate dots
+for(let i=0;i<15;i++){
+  for(let j=0;j<15;j++){
+    dots.push({x:15+i*28, y:15+j*28, eaten:false});
+  }
+}
+
+// Draw pacman
+function drawPacman(){
+  ctx.fillStyle = "yellow";
+  ctx.beginPath();
+  ctx.arc(pacman.x, pacman.y, 12, 0.25*Math.PI, 1.75*Math.PI);
+  ctx.lineTo(pacman.x, pacman.y);
+  ctx.fill();
+}
+
+// Draw dots
+function drawDots(){
+  ctx.fillStyle = "white";
+  dots.forEach(d => {
+    if(!d.eaten){
+      ctx.beginPath();
+      ctx.arc(d.x,d.y,4,0,2*Math.PI);
+      ctx.fill();
+    }
   });
+}
 
-  // Igrica - Flappy Bird sa preprekama
-  const startBtn = document.getElementById("startGameBtn");
-  const canvas = document.getElementById("gameCanvas");
-  const ctx = canvas.getContext("2d");
-  const scoreDisplay = document.getElementById("score");
+// Move pacman
+document.addEventListener("keydown", (e) => {
+  if(!gameActive) return;
+  if(e.key === "ArrowRight") pacman.dir = 0;
+  if(e.key === "ArrowDown") pacman.dir = 1;
+  if(e.key === "ArrowLeft") pacman.dir = 2;
+  if(e.key === "ArrowUp") pacman.dir = 3;
+});
 
-  let playerObj = {x:50, y:250, width:30, height:30, dy:0};
-  const gravity = 0.6;
-  const jump = -10;
-  let obstacles = [];
-  let frame = 0;
-  let score = 0;
-  let gameRunning = false;
+// Game loop
+function pacmanLoop(){
+  if(!gameActive) return;
+  ctx.fillStyle = "black";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  drawDots();
 
-  startBtn.addEventListener("click", function() {
-    if(!gameRunning && players.length){
-      gameRunning = true;
-      score = 0;
-      playerObj.y = 250;
-      playerObj.dy = 0;
-      obstacles = [];
-      frame = 0;
+  // Move
+  if(pacman.dir === 0) pacman.x += 4;
+  if(pacman.dir === 1) pacman.y += 4;
+  if(pacman.dir === 2) pacman.x -= 4;
+  if(pacman.dir === 3) pacman.y -= 4;
+
+  if(pacman.x < 0) pacman.x = 0;
+  if(pacman.y < 0) pacman.y = 0;
+  if(pacman.x > 450) pacman.x = 450;
+  if(pacman.y > 450) pacman.y = 450;
+
+  // Eat dots
+  dots.forEach(d => {
+    if(!d.eaten && Math.hypot(pacman.x - d.x, pacman.y - d.y) < 16){
+      d.eaten = true;
+      score += 10;
       scoreDisplay.textContent = score;
-      alert("Igra počinje! Klikom na canvas igrač leti.");
-      gameLoop();
-    } else if(!players.length){
-      alert("Prvo se registrujte!");
     }
   });
 
-  canvas.addEventListener("click", () => { if(gameRunning) playerObj.dy = jump; });
+  drawPacman();
+  requestAnimationFrame(pacmanLoop);
+}
 
-  function createObstacle(){
-    const gap = 120;
-    const minHeight = 50;
-    const maxHeight = 350;
-    const topHeight = Math.floor(Math.random() * (maxHeight - minHeight) + minHeight);
-    obstacles.push({x:canvas.width, y:0, width:40, height:topHeight});
-    obstacles.push({x:canvas.width, y:topHeight+gap, width:40, height:canvas.height-topHeight-gap});
-  }
-
-  function gameLoop(){
-    if(!gameRunning) return;
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    // Gravity
-    playerObj.dy += gravity;
-    playerObj.y += playerObj.dy;
-
-    // Obstacle generation
-    if(frame % 90 === 0) createObstacle();
-
-    // Draw obstacles and collision
-    for(let i=0;i<obstacles.length;i++){
-      const obs = obstacles[i];
-      obs.x -= 2;
-      ctx.fillStyle = "#27ae60";
-      ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-
-      if(playerObj.x < obs.x + obs.width && playerObj.x + playerObj.width > obs.x &&
-         playerObj.y < obs.y + obs.height && playerObj.y + playerObj.height > obs.y){
-        gameRunning = false;
-        endGame();
-      }
-    }
-
-    // Draw player
-    ctx.fillStyle = "#e74c3c";
-    ctx.fillRect(playerObj.x, playerObj.y, playerObj.width, playerObj.height);
-
-    // Update score
-    score++;
+// Start game on click
+document.getElementById("info").querySelector("button").addEventListener("click", () => {
+  if(players.length === 0) {
+    alert("Prvo se registrujte!");
+  } else {
+    gameActive = true;
+    score = 0;
+    dots.forEach(d=>d.eaten=false);
     scoreDisplay.textContent = score;
-
-    // Player hits ground
-    if(playerObj.y + playerObj.height > canvas.height){
-      playerObj.y = canvas.height - playerObj.height;
-      gameRunning = false;
-      endGame();
-    }
-
-    frame++;
-    if(gameRunning) requestAnimationFrame(gameLoop);
+    pacmanLoop();
   }
+});
 
-  function endGame(){
-    alert("Kraj igre! Tvoj score: " + score);
-    const nickname = players.length ? players[players.length-1].nickname : "Igrač";
-    addToLeaderboard(nickname, score);
-    if(players.length) players[players.length-1].score = score;
-  }
-
-  function addToLeaderboard(name, score){
-    const ol = document.getElementById("leaderboardList");
-    const li = document.createElement("li");
-    li.textContent = name + " - " + score;
-    ol.appendChild(li);
-  }
+/* ---------- Rang lista logika ---------- */
+function addToLeaderboard(name, score){
+  const list = document.getElementById("leaderboardList");
+  const li = document.createElement("li");
+  li.textContent = `${name} - ${score}`;
+  list.appendChild(li);
+}
 </script>
 
 </body>
