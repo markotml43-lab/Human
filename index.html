@@ -5,101 +5,100 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Turnir Igrica - PAC‑MAN</title>
 <style>
-  body { font-family: Arial, sans-serif; background:#f0f2f5; margin:0; padding:0; }
-  header { background:#4a90e2; color:white; padding:20px; text-align:center; }
-  nav { text-align:center; margin:10px 0; }
-  nav a { margin:0 10px; text-decoration:none; color:#4a90e2; font-weight:bold; }
-  main { padding:20px; max-width:900px; margin:0 auto; }
-  section { background:white; padding:20px; margin:20px 0; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1); }
-  button { padding:10px 20px; background:#4a90e2; color:white; border:none; border-radius:5px; cursor:pointer; }
-  button:hover { background:#357ab7; }
-  input { padding:8px; margin:5px 0; width:100%; border-radius:5px; border:1px solid #ccc; }
-  #pacmanCanvas { background:black; display:block; margin:10px auto; border:3px solid #4a90e2; }
-  .scoreDisplay { font-size:18px; font-weight:bold; margin-top:10px; text-align:center; }
+body { font-family: Arial, sans-serif; background:#f0f2f5; margin:0; padding:0; }
+header { background:#4a90e2; color:white; padding:20px; text-align:center; }
+nav { text-align:center; margin:10px 0; }
+nav a { margin:0 10px; text-decoration:none; color:#4a90e2; font-weight:bold; }
+main { padding:20px; max-width:900px; margin:0 auto; }
+section { background:white; padding:20px; margin:20px 0; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1); }
+button { padding:10px 20px; background:#4a90e2; color:white; border:none; border-radius:5px; cursor:pointer; }
+button:hover { background:#357ab7; }
+input { padding:8px; margin:5px 0; width:100%; border-radius:5px; border:1px solid #ccc; }
+#pacmanCanvas { background:black; display:block; margin:10px auto; border:3px solid #4a90e2; }
+.scoreDisplay { font-size:18px; font-weight:bold; margin-top:10px; text-align:center; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Turnir Igrica - PAC‑MAN</h1>
-  <nav>
-    <a href="#info">Početna</a>
-    <a href="#auth">Login / Registracija</a>
-    <a href="#game">Igra</a>
-    <a href="#leaderboard">Rang Lista</a>
-  </nav>
+<h1>Turnir Igrica - PAC‑MAN</h1>
+<nav>
+<a href="#info">Početna</a>
+<a href="#auth">Login / Registracija</a>
+<a href="#game">Igra</a>
+<a href="#leaderboard">Rang Lista</a>
+</nav>
 </header>
 
 <main>
-
 <section id="info">
-  <h2>Dobrodošli na Pac‑Man turnir!</h2>
-  <p>Registrujte se i igrajte PAC‑MAN! Kotizacija: <strong>10€</strong></p>
-  <p>Raspodela fonda: 50% nagrade, 30% humanitarno, 20% admin.</p>
-  <p>Turnir traje <strong>7 dana</strong> ili dok se ne skupi <strong>100 igrača</strong>.</p>
-  <button id="startBtn">Počni igru</button>
+<h2>Dobrodošli na Pac‑Man turnir!</h2>
+<p>Registrujte se i igrajte PAC‑MAN! Kotizacija: <strong>10€</strong></p>
+<p>Raspodela fonda: 50% nagrade, 30% humanitarno, 20% admin.</p>
+<p>Turnir traje <strong>7 dana</strong> ili dok se ne skupi <strong>100 igrača</strong>.</p>
+<button id="startBtn">Počni igru</button>
 </section>
 
 <section id="auth">
-  <h2>Login / Registracija</h2>
-  <div id="registerDiv">
-    <h3>Registracija</h3>
-    <form id="regForm">
-      <label for="nickname">Nickname:</label>
-      <input type="text" id="nickname" required>
-      <label for="email">Email:</label>
-      <input type="email" id="email" required>
-      <label for="password">Password:</label>
-      <input type="password" id="password" required>
-      <button type="submit">Registruj se</button>
-    </form>
-  </div>
-  <div id="loginDiv" style="margin-top:20px;">
-    <h3>Login</h3>
-    <form id="loginForm">
-      <label for="loginEmail">Email:</label>
-      <input type="email" id="loginEmail" required>
-      <label for="loginPassword">Password:</label>
-      <input type="password" id="loginPassword" required>
-      <button type="submit">Login</button>
-    </form>
-  </div>
-  <div id="userInfo" style="margin-top:15px; font-weight:bold;"></div>
+<h2>Login / Registracija</h2>
+
+<div id="registerDiv">
+<h3>Registracija</h3>
+<form id="regForm">
+<label for="nickname">Nickname:</label>
+<input type="text" id="nickname" required>
+<label for="email">Email:</label>
+<input type="email" id="email" required>
+<label for="password">Password:</label>
+<input type="password" id="password" required>
+<button type="submit">Registruj se</button>
+</form>
+<div id="verifySection" style="display:none; margin-top:10px;">
+<p>Potvrdite email klikom na dugme:</p>
+<button id="verifyBtn">Potvrdi email</button>
+</div>
+</div>
+
+<div id="loginDiv" style="margin-top:20px;">
+<h3>Login</h3>
+<form id="loginForm">
+<label for="loginEmail">Email:</label>
+<input type="email" id="loginEmail" required>
+<label for="loginPassword">Password:</label>
+<input type="password" id="loginPassword" required>
+<button type="submit">Login</button>
+</form>
+<div id="userInfo" style="margin-top:15px; font-weight:bold;"></div>
+</div>
 </section>
 
 <section id="game">
-  <h2>Pac‑Man Igra</h2>
-  <canvas id="pacmanCanvas" width="450" height="450"></canvas>
-  <div class="scoreDisplay">Score: <span id="pacmanScore">0</span></div>
+<h2>Pac‑Man Igra</h2>
+<canvas id="pacmanCanvas" width="450" height="450"></canvas>
+<div class="scoreDisplay">Score: <span id="pacmanScore">0</span></div>
 </section>
 
 <section id="leaderboard">
-  <h2>Rang Lista</h2>
-  <ol id="leaderboardList"></ol>
+<h2>Rang Lista</h2>
+<ol id="leaderboardList"></ol>
 </section>
 
 </main>
 
 <footer style="text-align:center; padding:20px; background:#eee;">
-  <p>&copy; 2026 Turnir Igrica | Humanitarni Fond & Admin</p>
+<p>&copy; 2026 Turnir Igrica | Humanitarni Fond & Admin</p>
 </footer>
 
 <script>
-/* ---------- Registracija i Login sa localStorage (ISPRAVLJENO) ---------- */
+/* ---------- Simulirana baza i email verifikacija ---------- */
 let players = JSON.parse(localStorage.getItem("players")) || [];
 let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 
 const regForm = document.getElementById("regForm");
 const loginForm = document.getElementById("loginForm");
 const userInfo = document.getElementById("userInfo");
-
-function updateUserInfo(){
-  if(currentUser){
-    userInfo.textContent = `Ulogovani ste kao: ${currentUser.nickname}`;
-  } else {
-    userInfo.textContent = "";
-  }
-}
+const verifySection = document.getElementById("verifySection");
+const verifyBtn = document.getElementById("verifyBtn");
 
 updateUserInfo();
 
@@ -114,11 +113,27 @@ regForm.addEventListener("submit", function(e){
     return;
   }
 
-  const newPlayer = {nickname,email,password,score:0};
+  const newPlayer = {nickname,email,password,score:0,verified:false};
   players.push(newPlayer);
   localStorage.setItem("players", JSON.stringify(players));
-  alert("Registracija uspešna! Sada se ulogujte.");
+  alert("Registracija uspešna! Sada potvrdite email.");
   regForm.reset();
+  verifySection.style.display = "block";
+  localStorage.setItem("lastRegisteredEmail", email);
+});
+
+// Simulacija potvrde emaila
+verifyBtn.addEventListener("click", function(){
+  const email = localStorage.getItem("lastRegisteredEmail");
+  if(!email) return alert("Nema emaila za potvrdu!");
+  const player = players.find(p => p.email === email);
+  if(player){
+    player.verified = true;
+    localStorage.setItem("players", JSON.stringify(players));
+    alert("Email potvrđen! Sada se možete ulogovati.");
+    verifySection.style.display = "none";
+    localStorage.removeItem("lastRegisteredEmail");
+  }
 });
 
 loginForm.addEventListener("submit", function(e){
@@ -127,16 +142,29 @@ loginForm.addEventListener("submit", function(e){
   const password = document.getElementById("loginPassword").value;
 
   const user = players.find(p => p.email === email && p.password === password);
-  if(user){
-    currentUser = user;
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
-    alert("Login uspešan! Možete igrati igru.");
-    loginForm.reset();
-    updateUserInfo();
-  } else {
+  if(!user){
     alert("Pogrešan email ili password!");
+    return;
   }
+  if(!user.verified){
+    alert("Morate potvrditi email pre login-a!");
+    return;
+  }
+
+  currentUser = user;
+  localStorage.setItem("currentUser", JSON.stringify(currentUser));
+  alert("Login uspešan! Možete igrati igru.");
+  loginForm.reset();
+  updateUserInfo();
 });
+
+function updateUserInfo(){
+  if(currentUser){
+    userInfo.textContent = `Ulogovani ste kao: ${currentUser.nickname}`;
+  } else {
+    userInfo.textContent = "";
+  }
+}
 
 /* ---------- Pacman Igra ---------- */
 const canvas = document.getElementById("pacmanCanvas");
@@ -208,7 +236,7 @@ function pacmanLoop(){
 }
 
 document.getElementById("startBtn").addEventListener("click", () => {
-  if(!currentUser) {
+  if(!currentUser){
     alert("Morate se ulogovati pre igranja!");
     return;
   }
@@ -223,7 +251,7 @@ document.getElementById("startBtn").addEventListener("click", () => {
 function updateLeaderboard(){
   const list = document.getElementById("leaderboardList");
   list.innerHTML = "";
-  const sorted = [...players].sort((a,b)=>b.score-a.score);
+  const sorted = [...players].filter(p => p.verified).sort((a,b)=>b.score-a.score);
   sorted.forEach(p => {
     const li = document.createElement("li");
     li.textContent = `${p.nickname} - ${p.score}`;
