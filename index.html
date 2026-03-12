@@ -32,15 +32,14 @@
 
 <main>
 
-<!-- Početna sekcija -->
 <section id="info">
   <h2>Dobrodošli na Pac‑Man turnir!</h2>
   <p>Registrujte se i igrajte PAC‑MAN! Kotizacija: <strong>10€</strong></p>
-  <p>Raspodela fonda: 50% nagrade (1.,2.,3. mesto), 30% humanitarno, 20% admin.</p>
+  <p>Raspodela fonda: 50% nagrade, 30% humanitarno, 20% admin.</p>
   <p>Turnir traje <strong>7 dana</strong> ili dok se ne skupi <strong>100 igrača</strong>.</p>
+  <button id="startBtn">Počni igru</button>
 </section>
 
-<!-- Login / Registracija -->
 <section id="auth">
   <h2>Login / Registracija</h2>
   <div id="registerDiv">
@@ -65,16 +64,15 @@
       <button type="submit">Login</button>
     </form>
   </div>
+  <div id="userInfo" style="margin-top:15px; font-weight:bold;"></div>
 </section>
 
-<!-- PAC‑MAN igra -->
 <section id="game">
   <h2>Pac‑Man Igra</h2>
   <canvas id="pacmanCanvas" width="450" height="450"></canvas>
   <div class="scoreDisplay">Score: <span id="pacmanScore">0</span></div>
 </section>
 
-<!-- Rang Lista -->
 <section id="leaderboard">
   <h2>Rang Lista</h2>
   <ol id="leaderboardList"></ol>
@@ -87,26 +85,37 @@
 </footer>
 
 <script>
-/* ---------- Registracija i Login sa localStorage ---------- */
+/* ---------- Registracija i Login sa localStorage (ISPRAVLJENO) ---------- */
 let players = JSON.parse(localStorage.getItem("players")) || [];
-let currentUser = null;
+let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 
 const regForm = document.getElementById("regForm");
 const loginForm = document.getElementById("loginForm");
+const userInfo = document.getElementById("userInfo");
+
+function updateUserInfo(){
+  if(currentUser){
+    userInfo.textContent = `Ulogovani ste kao: ${currentUser.nickname}`;
+  } else {
+    userInfo.textContent = "";
+  }
+}
+
+updateUserInfo();
 
 regForm.addEventListener("submit", function(e){
   e.preventDefault();
-  const nickname = document.getElementById("nickname").value;
-  const email = document.getElementById("email").value;
+  const nickname = document.getElementById("nickname").value.trim();
+  const email = document.getElementById("email").value.trim().toLowerCase();
   const password = document.getElementById("password").value;
 
-  // Provera da li email već postoji
   if(players.some(p => p.email === email)){
     alert("Email već registrovan!");
     return;
   }
 
-  players.push({nickname,email,password,score:0});
+  const newPlayer = {nickname,email,password,score:0};
+  players.push(newPlayer);
   localStorage.setItem("players", JSON.stringify(players));
   alert("Registracija uspešna! Sada se ulogujte.");
   regForm.reset();
@@ -114,14 +123,16 @@ regForm.addEventListener("submit", function(e){
 
 loginForm.addEventListener("submit", function(e){
   e.preventDefault();
-  const email = document.getElementById("loginEmail").value;
+  const email = document.getElementById("loginEmail").value.trim().toLowerCase();
   const password = document.getElementById("loginPassword").value;
 
   const user = players.find(p => p.email === email && p.password === password);
   if(user){
     currentUser = user;
+    localStorage.setItem("currentUser", JSON.stringify(currentUser));
     alert("Login uspešan! Možete igrati igru.");
     loginForm.reset();
+    updateUserInfo();
   } else {
     alert("Pogrešan email ili password!");
   }
@@ -132,12 +143,11 @@ const canvas = document.getElementById("pacmanCanvas");
 const ctx = canvas.getContext("2d");
 const scoreDisplay = document.getElementById("pacmanScore");
 
-let pacman = { x:220, y:220, dir:0 };  // 0=desno,1=dole,2=levo,3=gore
+let pacman = { x:220, y:220, dir:0 }; 
 let dots = [];
 let score = 0;
 let gameActive = false;
 
-// Generate dots
 for(let i=0;i<15;i++){
   for(let j=0;j<15;j++){
     dots.push({x:15+i*28, y:15+j*28, eaten:false});
@@ -177,17 +187,14 @@ function pacmanLoop(){
   ctx.fillRect(0,0,canvas.width,canvas.height);
   drawDots();
 
-  // Move pacman
   if(pacman.dir === 0) pacman.x += 4;
   if(pacman.dir === 1) pacman.y += 4;
   if(pacman.dir === 2) pacman.x -= 4;
   if(pacman.dir === 3) pacman.y -= 4;
 
-  // Boundaries
   pacman.x = Math.max(12, Math.min(450-12, pacman.x));
   pacman.y = Math.max(12, Math.min(450-12, pacman.y));
 
-  // Eat dots
   dots.forEach(d => {
     if(!d.eaten && Math.hypot(pacman.x - d.x, pacman.y - d.y) < 16){
       d.eaten = true;
@@ -200,8 +207,7 @@ function pacmanLoop(){
   requestAnimationFrame(pacmanLoop);
 }
 
-// Start game on button click, only if logged in
-document.getElementById("info").querySelector("button").addEventListener("click", () => {
+document.getElementById("startBtn").addEventListener("click", () => {
   if(!currentUser) {
     alert("Morate se ulogovati pre igranja!");
     return;
@@ -213,7 +219,7 @@ document.getElementById("info").querySelector("button").addEventListener("click"
   pacmanLoop();
 });
 
-// Rang lista update
+/* Rang lista */
 function updateLeaderboard(){
   const list = document.getElementById("leaderboardList");
   list.innerHTML = "";
@@ -225,25 +231,22 @@ function updateLeaderboard(){
   });
 }
 
-// Save score when game ends
 function saveScore(){
   if(currentUser){
-    currentUser.score = score;
+    currentUser.score = Math.max(score, currentUser.score);
     players = players.map(p => p.email === currentUser.email ? currentUser : p);
     localStorage.setItem("players", JSON.stringify(players));
     updateLeaderboard();
   }
 }
 
-// Override pacmanLoop to detect end
 const originalPacmanLoop = pacmanLoop;
 pacmanLoop = function(){
   if(!gameActive) return;
   originalPacmanLoop();
-  // Check if all dots eaten
   if(dots.every(d=>d.eaten)){
     gameActive = false;
-    alert("Bravo! Završili ste igru! Score: " + score);
+    alert(`Bravo! Završili ste igru! Score: ${score}`);
     saveScore();
   }
 };
