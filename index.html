@@ -5,23 +5,37 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Turnir Igrica - PAC‑MAN</title>
 <style>
-body { font-family: Arial, sans-serif; background:#f0f2f5; margin:0; padding:0; }
-header { background:#4a90e2; color:white; padding:20px; text-align:center; }
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  margin:0; padding:0; color:white;
+}
+header {
+  background: rgba(0,0,0,0.6);
+  padding:20px; text-align:center; box-shadow:0 4px 8px rgba(0,0,0,0.3);
+}
 nav { text-align:center; margin:10px 0; }
-nav a { margin:0 10px; text-decoration:none; color:#4a90e2; font-weight:bold; }
-main { padding:20px; max-width:900px; margin:0 auto; }
-section { background:white; padding:20px; margin:20px 0; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1); }
-button { padding:10px 20px; background:#4a90e2; color:white; border:none; border-radius:5px; cursor:pointer; }
-button:hover { background:#357ab7; }
-input { padding:8px; margin:5px 0; width:100%; border-radius:5px; border:1px solid #ccc; }
-#pacmanCanvas { background:black; display:block; margin:10px auto; border:3px solid #4a90e2; }
-.scoreDisplay { font-size:18px; font-weight:bold; margin-top:10px; text-align:center; }
+nav a { margin:0 10px; text-decoration:none; color:#ffd700; font-weight:bold; }
+main { padding:20px; max-width:1000px; margin:0 auto; }
+section {
+  background: rgba(255,255,255,0.05); padding:20px; margin:20px 0;
+  border-radius:15px; box-shadow:0 4px 15px rgba(0,0,0,0.5);
+}
+button {
+  padding:10px 20px; background:#ffd700; color:#1e3c72; border:none;
+  border-radius:5px; cursor:pointer; font-weight:bold;
+}
+button:hover { background:#ffc107; }
+input { padding:10px; margin:5px 0; width:100%; border-radius:5px; border:none; }
+#pacmanCanvas { background:black; display:block; margin:10px auto; border:3px solid #ffd700; }
+.scoreDisplay { font-size:20px; font-weight:bold; margin-top:10px; text-align:center; }
+#userInfo { margin-top:15px; font-weight:bold; color:#ffd700; text-align:center; }
 </style>
 </head>
 <body>
 
 <header>
-<h1>Turnir Igrica - PAC‑MAN</h1>
+<h1>Pac‑Man Turnir</h1>
 <nav>
 <a href="#info">Početna</a>
 <a href="#auth">Login / Registracija</a>
@@ -31,11 +45,12 @@ input { padding:8px; margin:5px 0; width:100%; border-radius:5px; border:1px sol
 </header>
 
 <main>
+
 <section id="info">
 <h2>Dobrodošli na Pac‑Man turnir!</h2>
 <p>Registrujte se i igrajte PAC‑MAN! Kotizacija: <strong>10€</strong></p>
 <p>Raspodela fonda: 50% nagrade, 30% humanitarno, 20% admin.</p>
-<p>Turnir traje <strong>7 dana</strong> ili dok se ne skupi <strong>100 igrača</strong>.</p>
+<p>Turnir traje dok se ne skupi <strong>100 igrača</strong>.</p>
 <button id="startBtn">Počni igru</button>
 </section>
 
@@ -45,12 +60,9 @@ input { padding:8px; margin:5px 0; width:100%; border-radius:5px; border:1px sol
 <div id="registerDiv">
 <h3>Registracija</h3>
 <form id="regForm">
-<label for="nickname">Nickname:</label>
-<input type="text" id="nickname" required>
-<label for="email">Email:</label>
-<input type="email" id="email" required>
-<label for="password">Password:</label>
-<input type="password" id="password" required>
+<label>Nickname:</label><input type="text" id="nickname" required>
+<label>Email:</label><input type="email" id="email" required>
+<label>Password:</label><input type="password" id="password" required>
 <button type="submit">Registruj se</button>
 </form>
 <div id="verifySection" style="display:none; margin-top:10px;">
@@ -62,13 +74,11 @@ input { padding:8px; margin:5px 0; width:100%; border-radius:5px; border:1px sol
 <div id="loginDiv" style="margin-top:20px;">
 <h3>Login</h3>
 <form id="loginForm">
-<label for="loginEmail">Email:</label>
-<input type="email" id="loginEmail" required>
-<label for="loginPassword">Password:</label>
-<input type="password" id="loginPassword" required>
+<label>Email:</label><input type="email" id="loginEmail" required>
+<label>Password:</label><input type="password" id="loginPassword" required>
 <button type="submit">Login</button>
 </form>
-<div id="userInfo" style="margin-top:15px; font-weight:bold;"></div>
+<div id="userInfo"></div>
 </div>
 </section>
 
@@ -85,12 +95,12 @@ input { padding:8px; margin:5px 0; width:100%; border-radius:5px; border:1px sol
 
 </main>
 
-<footer style="text-align:center; padding:20px; background:#eee;">
-<p>&copy; 2026 Turnir Igrica | Humanitarni Fond & Admin</p>
+<footer style="text-align:center; padding:20px; background: rgba(0,0,0,0.5);">
+<p>&copy; 2026 Pac‑Man Turnir | Humanitarni Fond & Admin</p>
 </footer>
 
 <script>
-/* ---------- Simulirana baza i email verifikacija ---------- */
+/* ---------- Baza i verifikacija ---------- */
 let players = JSON.parse(localStorage.getItem("players")) || [];
 let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 
@@ -107,63 +117,41 @@ regForm.addEventListener("submit", function(e){
   const nickname = document.getElementById("nickname").value.trim();
   const email = document.getElementById("email").value.trim().toLowerCase();
   const password = document.getElementById("password").value;
-
   if(players.some(p => p.email === email)){
-    alert("Email već registrovan!");
-    return;
+    alert("Email već registrovan!"); return;
   }
-
   const newPlayer = {nickname,email,password,score:0,verified:false};
   players.push(newPlayer);
   localStorage.setItem("players", JSON.stringify(players));
-  alert("Registracija uspešna! Sada potvrdite email.");
+  localStorage.setItem("lastRegisteredEmail", email);
+  alert("Registracija uspešna! Potvrdite email.");
   regForm.reset();
   verifySection.style.display = "block";
-  localStorage.setItem("lastRegisteredEmail", email);
 });
 
-// Simulacija potvrde emaila
 verifyBtn.addEventListener("click", function(){
   const email = localStorage.getItem("lastRegisteredEmail");
   if(!email) return alert("Nema emaila za potvrdu!");
-  const player = players.find(p => p.email === email);
-  if(player){
-    player.verified = true;
-    localStorage.setItem("players", JSON.stringify(players));
-    alert("Email potvrđen! Sada se možete ulogovati.");
-    verifySection.style.display = "none";
-    localStorage.removeItem("lastRegisteredEmail");
-  }
+  const player = players.find(p=>p.email===email);
+  if(player){ player.verified=true; localStorage.setItem("players", JSON.stringify(players)); alert("Email potvrđen!"); verifySection.style.display="none"; localStorage.removeItem("lastRegisteredEmail"); }
 });
 
 loginForm.addEventListener("submit", function(e){
   e.preventDefault();
   const email = document.getElementById("loginEmail").value.trim().toLowerCase();
   const password = document.getElementById("loginPassword").value;
-
-  const user = players.find(p => p.email === email && p.password === password);
-  if(!user){
-    alert("Pogrešan email ili password!");
-    return;
-  }
-  if(!user.verified){
-    alert("Morate potvrditi email pre login-a!");
-    return;
-  }
-
+  const user = players.find(p=>p.email===email && p.password===password);
+  if(!user){ alert("Pogrešan email ili password!"); return; }
+  if(!user.verified){ alert("Morate potvrditi email pre login-a!"); return; }
   currentUser = user;
   localStorage.setItem("currentUser", JSON.stringify(currentUser));
-  alert("Login uspešan! Možete igrati igru.");
-  loginForm.reset();
   updateUserInfo();
+  alert("Login uspešan! Možete igrati igru.");
 });
 
 function updateUserInfo(){
-  if(currentUser){
-    userInfo.textContent = `Ulogovani ste kao: ${currentUser.nickname}`;
-  } else {
-    userInfo.textContent = "";
-  }
+  if(currentUser){ userInfo.textContent=`Ulogovani ste kao: ${currentUser.nickname}`; }
+  else{ userInfo.textContent=""; }
 }
 
 /* ---------- Pacman Igra ---------- */
@@ -171,113 +159,45 @@ const canvas = document.getElementById("pacmanCanvas");
 const ctx = canvas.getContext("2d");
 const scoreDisplay = document.getElementById("pacmanScore");
 
-let pacman = { x:220, y:220, dir:0 }; 
-let dots = [];
-let score = 0;
-let gameActive = false;
+let pacman={x:220,y:220,dir:0}; 
+let dots=[]; 
+let score=0; 
+let gameActive=false;
 
-for(let i=0;i<15;i++){
-  for(let j=0;j<15;j++){
-    dots.push({x:15+i*28, y:15+j*28, eaten:false});
-  }
-}
+function initDots(){ dots=[]; for(let i=0;i<15;i++){for(let j=0;j<15;j++){dots.push({x:15+i*28,y:15+j*28,eaten:false});}}}
+initDots();
 
-function drawPacman(){
-  ctx.fillStyle = "yellow";
-  ctx.beginPath();
-  ctx.arc(pacman.x, pacman.y, 12, 0.25*Math.PI, 1.75*Math.PI);
-  ctx.lineTo(pacman.x, pacman.y);
-  ctx.fill();
-}
+function drawPacman(){ ctx.fillStyle="yellow"; ctx.beginPath(); ctx.arc(pacman.x,pacman.y,12,0.25*Math.PI,1.75*Math.PI); ctx.lineTo(pacman.x,pacman.y); ctx.fill(); }
+function drawDots(){ ctx.fillStyle="white"; dots.forEach(d=>{ if(!d.eaten){ctx.beginPath(); ctx.arc(d.x,d.y,4,0,2*Math.PI); ctx.fill();}}); }
 
-function drawDots(){
-  ctx.fillStyle = "white";
-  dots.forEach(d => {
-    if(!d.eaten){
-      ctx.beginPath();
-      ctx.arc(d.x,d.y,4,0,2*Math.PI);
-      ctx.fill();
-    }
-  });
-}
-
-document.addEventListener("keydown", (e) => {
-  if(!gameActive) return;
-  if(e.key === "ArrowRight") pacman.dir = 0;
-  if(e.key === "ArrowDown") pacman.dir = 1;
-  if(e.key === "ArrowLeft") pacman.dir = 2;
-  if(e.key === "ArrowUp") pacman.dir = 3;
-});
+document.addEventListener("keydown", (e)=>{ if(!gameActive) return; if(e.key==="ArrowRight") pacman.dir=0; if(e.key==="ArrowDown") pacman.dir=1; if(e.key==="ArrowLeft") pacman.dir=2; if(e.key==="ArrowUp") pacman.dir=3; });
 
 function pacmanLoop(){
   if(!gameActive) return;
-  ctx.fillStyle = "black";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="black"; ctx.fillRect(0,0,canvas.width,canvas.height);
   drawDots();
-
-  if(pacman.dir === 0) pacman.x += 4;
-  if(pacman.dir === 1) pacman.y += 4;
-  if(pacman.dir === 2) pacman.x -= 4;
-  if(pacman.dir === 3) pacman.y -= 4;
-
-  pacman.x = Math.max(12, Math.min(450-12, pacman.x));
-  pacman.y = Math.max(12, Math.min(450-12, pacman.y));
-
-  dots.forEach(d => {
-    if(!d.eaten && Math.hypot(pacman.x - d.x, pacman.y - d.y) < 16){
-      d.eaten = true;
-      score += 10;
-      scoreDisplay.textContent = score;
-    }
-  });
-
+  if(pacman.dir===0) pacman.x+=4; if(pacman.dir===1) pacman.y+=4; if(pacman.dir===2) pacman.x-=4; if(pacman.dir===3) pacman.y-=4;
+  pacman.x=Math.max(12,Math.min(450-12,pacman.x)); pacman.y=Math.max(12,Math.min(450-12,pacman.y));
+  dots.forEach(d=>{ if(!d.eaten && Math.hypot(pacman.x-d.x,pacman.y-d.y)<16){ d.eaten=true; score+=10; scoreDisplay.textContent=score; }});
   drawPacman();
   requestAnimationFrame(pacmanLoop);
+  if(dots.every(d=>d.eaten)){ gameActive=false; alert(`Bravo! Završili ste igru! Score: ${score}`); saveScore(); }
 }
 
-document.getElementById("startBtn").addEventListener("click", () => {
-  if(!currentUser){
-    alert("Morate se ulogovati pre igranja!");
-    return;
-  }
-  gameActive = true;
-  score = 0;
-  dots.forEach(d=>d.eaten=false);
-  scoreDisplay.textContent = score;
-  pacmanLoop();
+document.getElementById("startBtn").addEventListener("click", ()=>{
+  if(!currentUser){ alert("Morate se ulogovati pre igranja!"); return; }
+  gameActive=true; score=currentUser.score || 0; initDots(); scoreDisplay.textContent=score; pacmanLoop();
 });
 
-/* Rang lista */
+function saveScore(){ if(currentUser){ currentUser.score=score; players=players.map(p=>p.email===currentUser.email?currentUser:p); localStorage.setItem("players",JSON.stringify(players)); updateLeaderboard(); } }
+
 function updateLeaderboard(){
-  const list = document.getElementById("leaderboardList");
-  list.innerHTML = "";
-  const sorted = [...players].filter(p => p.verified).sort((a,b)=>b.score-a.score);
-  sorted.forEach(p => {
-    const li = document.createElement("li");
-    li.textContent = `${p.nickname} - ${p.score}`;
-    list.appendChild(li);
-  });
+  const list=document.getElementById("leaderboardList"); list.innerHTML="";
+  const sorted=[...players].filter(p=>p.verified).sort((a,b)=>b.score-a.score);
+  sorted.forEach(p=>{ const li=document.createElement("li"); li.textContent=`${p.nickname} - ${p.score}`; list.appendChild(li); });
 }
 
-function saveScore(){
-  if(currentUser){
-    currentUser.score = Math.max(score, currentUser.score);
-    players = players.map(p => p.email === currentUser.email ? currentUser : p);
-    localStorage.setItem("players", JSON.stringify(players));
-    updateLeaderboard();
-  }
-}
-
-const originalPacmanLoop = pacmanLoop;
-pacmanLoop = function(){
-  if(!gameActive) return;
-  originalPacmanLoop();
-  if(dots.every(d=>d.eaten)){
-    gameActive = false;
-    alert(`Bravo! Završili ste igru! Score: ${score}`);
-    saveScore();
-  }
-};
+updateLeaderboard();
 </script>
 
 </body>
